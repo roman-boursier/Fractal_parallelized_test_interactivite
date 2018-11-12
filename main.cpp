@@ -86,27 +86,55 @@ int main(int argc, char * argv[]) {
                                           {0.285, 0.013},
                                           {0.285, 0.01},
                                           {0.3, 0.5},};
-    
-        // calcul de la fractale
-        c = new_complex(c_values[1][0], c_values[1][1]);
-        julia(newImg);
 
         // interaction avec l'utilisateur
         int key; // -1 indique qu'aucune touche est enfoncée
-
-        double i = 0.001;
+        int f_choice = 0;
+        double r =  c_values[f_choice][0];
+        double i = c_values[f_choice][1];
 
         // on attend 30ms une saisie clavier, key prend la valeur de la touche
         // si aucune touche est enfoncée, au bout de 30ms on exécute quand même
         // la boucle avec key = -1, l'image est mise à jour
-        while( (key = (char) (cvWaitKey(30) & 0xFF)) ) {
+        while( (key =  (cvWaitKey(30) & 0xFF)) ) {
+            printf("key : %d", key);
+            switch (key){
+                case 82:
+                    r +=  0.001;
+                    i += 0.001;
+                    break;
+                case 84:
+                    r -= 0.001;
+                    i -= 0.001;
+                    break;
+                case 177:
+                    f_choice = 0;
+                    r = c_values[f_choice][0];
+                    i = c_values[f_choice][1];
+                    break;
+                case 178:
+                    f_choice = 1;
+                    r = c_values[f_choice][0];
+                    i = c_values[f_choice][1];
+                    break;
+                case 179:
+                    f_choice = 2;
+                    r = c_values[f_choice][0];
+                    i = c_values[f_choice][1];
+                    break;
+                case 180:
+                    f_choice = 3;
+                    r = c_values[f_choice][0];
+                    i = c_values[f_choice][1];
+                    break;
+            }
+
             if (key == 'q'){
                 break;
-            } else if(key == 'a'){
-                c = new_complex(c_values[1][0] + i, c_values[1][1]);
-                julia(newImg);
-                 i += 0.001;
             }
+
+            c = new_complex(r, i);
+            julia(newImg);
             imshow("image", newImg); // met à jour l'image
         }
 
