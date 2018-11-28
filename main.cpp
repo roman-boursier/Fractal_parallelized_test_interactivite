@@ -3,17 +3,24 @@
 
 /* CONSTANTES *****************************************************************/
 
-#define IMG_W 400
-#define IMG_H 400 //768
+#define IMG_W 200
+#define IMG_H 200 //768
 #define MAX_ITER 300    // 200
 #define MAX_NORM 4        // 2
 
-#define LIMIT_LEFT -1
+/*#define LIMIT_LEFT -1
 #define LIMIT_RIGHT 1
 #define LIMIT_TOP -1
-#define LIMIT_BOTTOM 1
+#define LIMIT_BOTTOM 1*/
 
 /* MANIPULER LES NOMBRES COMPLEXES ********************************************/
+
+double LIMIT_LEFT = -1;
+double LIMIT_RIGHT = 1;
+double LIMIT_TOP = -1;
+double LIMIT_BOTTOM = 1;
+double ZOOM_LEVEL = 1;
+
 
 typedef struct {
     long double real;
@@ -77,6 +84,34 @@ void julia(cv::Mat& img) {
 
 /* MAIN ***********************************************************************/
 
+
+/*!
+ * \brief Change zoom level
+ * @param type 0->inital 1->increment 2->decrement
+ * @return
+ */
+void changeZoom(int type){
+    if(type == 1 && ZOOM_LEVEL < 1.9){
+        LIMIT_LEFT += 0.1;
+        LIMIT_RIGHT -= 0.1;
+        LIMIT_TOP += 0.1;
+        LIMIT_BOTTOM -= 0.1;
+        ZOOM_LEVEL += 0.1;
+    } else if(type == 2 && ZOOM_LEVEL > 0.1 ) {
+        LIMIT_LEFT -= 0.1;
+        LIMIT_RIGHT += 0.1;
+        LIMIT_TOP -= 0.1;
+        LIMIT_BOTTOM += 0.1;
+        ZOOM_LEVEL -= 0.1;
+    } else {
+        LIMIT_LEFT = -1;
+        LIMIT_RIGHT = 1;
+        LIMIT_TOP = -1;
+        LIMIT_BOTTOM = 1;
+        ZOOM_LEVEL = 1;
+    }
+}
+
 int main(int argc, char * argv[]) {
     // creation de l'image
     cv::Mat newImg(IMG_H, IMG_W, CV_8UC3);
@@ -97,7 +132,7 @@ int main(int argc, char * argv[]) {
         // si aucune touche est enfoncée, au bout de 30ms on exécute quand même
         // la boucle avec key = -1, l'image est mise à jour
         while( (key =  (cvWaitKey(30) & 0xFF)) ) {
-            printf("key : %d", key);
+            //printf("key : %d", key);
             switch (key){
                 case 82:
                     r +=  0.001;
@@ -108,24 +143,34 @@ int main(int argc, char * argv[]) {
                     i -= 0.001;
                     break;
                 case 177:
+                    changeZoom(0);
                     f_choice = 0;
                     r = c_values[f_choice][0];
                     i = c_values[f_choice][1];
                     break;
                 case 178:
+                    changeZoom(0);
                     f_choice = 1;
                     r = c_values[f_choice][0];
                     i = c_values[f_choice][1];
                     break;
                 case 179:
+                    changeZoom(0);
                     f_choice = 2;
                     r = c_values[f_choice][0];
                     i = c_values[f_choice][1];
                     break;
                 case 180:
+                    changeZoom(0);
                     f_choice = 3;
                     r = c_values[f_choice][0];
                     i = c_values[f_choice][1];
+                    break;
+                case 171:
+                    changeZoom(1);
+                    break;
+                case 173:
+                    changeZoom(2);
                     break;
             }
 
